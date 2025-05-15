@@ -1,0 +1,35 @@
+# Example map: each key is a region, and values are its neighbors
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A', 'B', 'D', 'E'],
+    'D': ['B', 'C', 'E'],
+    'E': ['C', 'D']
+}
+
+colors = ['Red', 'Green', 'Blue']
+
+def is_safe(node, color, assignment):
+    for neighbor in graph[node]:
+        if neighbor in assignment and assignment[neighbor] == color:
+            return False
+    return True
+
+def solve(assignment, nodes):
+    if not nodes:
+        return assignment
+
+    node = nodes[0]
+    for color in colors:
+        if is_safe(node, color, assignment):
+            assignment[node] = color
+            result = solve(assignment, nodes[1:])
+            if result:
+                return result
+            del assignment[node]
+
+    return None
+
+# Start solving
+solution = solve({}, list(graph.keys()))
+print("Solution:", solution)
